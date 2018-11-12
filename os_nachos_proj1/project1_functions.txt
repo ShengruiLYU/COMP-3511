@@ -1,0 +1,3 @@
+1. ReadyToRun() when a thread is ready, this function will decide how to place it into ready queue. Mark a thread as ready, but not running. Put it on the ready list, for later scheduling onto the CPU.
+2. FindNextToRun() this function decides how to pick one thread to run from the ready queue.
+3. ShouldISwitch() decides whether the running thread should preemptively give up to a new forked thread. This function uses the policy information to tell a thread::fork to preempt the current thread or to not.  The answer is the domain of the scheduler, so it is a member function call. 

@@ -1,0 +1,46 @@
+1. Why	did	we	use	the	function	running_for_calculation()?
+First, it do some calculation which could be used as a indicator for us to monitor the result of running all the processes.
+
+What's more there is a line calls currentThread->Yield() in the running for calculation. This call makes the current thread (the prior thread at first) stop and switch to another thread which is thread2 in this project.
+And then in latter thread, it calls this function so it switches to thread1 again. And we can see this from output2.
+
+2. What	kind	of	service	does	the	function	currentThread->Yield() provide?
+
+It relinquished the CPU if any other thread is runnable. It will come back to this thread next turn.
+In other words, it gets the first thread in the ready queue and put current thread to the end of ready queue.
+It will return immediately if there is no other thread in the ready queue.
+Yield is an action that occurs in a computer program during multithreading, of forcing a processor to relinquish control of the current running thread, and sending it to the end of the running queue, of the same scheduling priority.
+
+3. What	is	the	relationship	between	the	function	Fork() and	the	function prior_thread(int
+arg)?
+
+The Fork() function creates a son thread to invoke the prior_thread() function and wait for it to die.
+Fork() is the caller to create the son thread and that thread calls prior_thread() and prior_thread() is a function running on the son thread.
+
+
+4. Explain	how	were	the	values	of	‘The	global	variable	in	Thread1’	and	‘The	global	variable
+in	Thread2’	generated	in	project1_output4.txt.
+
+The output is global variable in thread1 is 4 and in thread2 is 20.
+It is because in the prior thread, when it needs to call the run_for_calculation() function.
+The program calls thread2 to suspend, and meanwhile thread1 is still running.
+Then in thread1 it adds 3 to global variable in prior thread so the global variable is 4 here in prior thread.
+And then resume to thread2, in thread2, it multiplies 5 to global variable.
+Since it was first changed by thread1 and now it is 4, so this time it turns to be 20 in the latter thread.
+
+5. Find	out	the	difference	among the	outputs	of	task	3	which	are	saved	in
+project1_output3.txt,	project1_output4.txt and	project1_output5.txt, respectively.
+Describe	and	explain	the difference	briefly.
+
+In output3, global variable is 5 in thread2 and 8 in thread1.
+This is because thread1 first executes and then it will call the run_for_calculation() function which contains Yield. Yield makes thread2 to come to the execution.
+Then thread2 is activated. It runs and suspends thread1 (th1->Suspend()) before thread2 calls calculation. So it will not switch back to thread1 within the calculation function.
+Then after thread2 finished, thread1 will continue to run. So global variable first *= 5 in thread2 and then += 3 in thread1.
+
+In output4, global variable is 4 in thread1 and 20 in thread2.
+Thread1 first executes and then suspends thread2. Therefore in calculation function it will keep running thread1 even though it calls Yield(). Then we resume thread2. Then after the completion of thread1, thread2 can run. So the global variable first +=3 in thread1 and then *= 5 in thread2. It is 4 and then 20.
+
+In output5, global variable is 5 in thread2 and 8 in thread1.
+Thread1 calls yield in running for calculation and it switches to thread2. Then thread2 calls running for calculation and switches to thread1.
+Here thread1 calls Yield again, so it let thread2 to run which means that it multiplies global variable by 5.
+And until thread2 finishes, thread1 continues to run. So the global variable first *= 5 and then += 3.
